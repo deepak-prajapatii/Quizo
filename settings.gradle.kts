@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "QuizApp"
 include(":app")
- 
+include(":data")
+include(":domain")
