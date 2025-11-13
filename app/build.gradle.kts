@@ -39,6 +39,9 @@ android {
     buildFeatures {
         compose = true
     }
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
@@ -63,4 +66,7 @@ dependencies {
     //Dagger hilt
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.compiler)
+
+    implementation(project(":data"))
+    implementation(project(":domain"))
 }

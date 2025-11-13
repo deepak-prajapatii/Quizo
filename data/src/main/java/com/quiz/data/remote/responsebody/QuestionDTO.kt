@@ -1,6 +1,6 @@
-package com.quiz.domain.entities
+package com.quiz.data.remote.responsebody
 
-class Question(
+data class QuestionDTO(
     val id: Long,
     val question: String,
     val options: List<String>,
