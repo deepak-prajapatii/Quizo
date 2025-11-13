@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import com.quiz.Screen
 import com.quiz.ui.quizlanding.QuizLandingScreen
 import com.quiz.ui.quizquestion.QuizQuestionScreen
+import com.quiz.ui.result.QuizResultScreen
 
 
 const val NAV_HOST_ROUTE = "main-route"
@@ -25,9 +26,11 @@ fun QuizNavGraph() {
             route = NAV_HOST_ROUTE
         ) {
             composable(Screen.QuizLanding.route) {
-                QuizLandingScreen {
-                    navController.navigate(Screen.QuizQuestion.route)
-                }
+
+                QuizResultScreen(onRestartQuiz = {}, backToHome = {})
+//                QuizLandingScreen {
+//                    navController.navigate(Screen.QuizQuestion.route)
+//                }
             }
             composable(Screen.QuizQuestion.route) {
                 QuizQuestionScreen() {
