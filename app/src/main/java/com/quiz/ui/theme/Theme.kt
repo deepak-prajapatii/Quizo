@@ -1,6 +1,5 @@
 package com.quiz.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -9,35 +8,64 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = PrimaryGreen,              // Accent green
+    onPrimary = Color(0xFF0F2914),       // Dark text/icon on green
+
+    primaryContainer = PrimaryGreenDark,
+    onPrimaryContainer = Color.White,
+
+    secondary = SecondaryText,           // Muted grey for descriptions
+    onSecondary = Color.White,
+
+    tertiary = PrimaryGreenLight,
+
+    background = Background,             // #0E1112 dark charcoal
+    onBackground = OnBackground,         // #BFC8D0 soft white
+
+    surface = Surface,                   // #151819 deep grey
+    onSurface = OnSurface,               // #BFC8D0
+    surfaceVariant = SurfaceVariant,     // #222526 raised card
+    onSurfaceVariant = OnSurface,
+
+    outline = Outline,                   // #2B3336 thin borders
+
+    error = Error,
+    onError = Color.White,
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+private val LightColorScheme = lightColorScheme(
+    primary = PrimaryGreen,
+    onPrimary = Color(0xFF0F2914),
+
+    primaryContainer = PrimaryGreenDark,
+    onPrimaryContainer = Color.White,
+
+    secondary = SecondaryText,       // Still muted grey, NOT dark grey
+    onSecondary = Color.Black,
+
+    tertiary = PrimaryGreenLight,
+
+    // Soft-light mode, not bright white
+    background = Color(0xFFF2F4F3),   // Gentle off-white with green hint
+    onBackground = Color(0xFF1B1C1D), // Darker grey for readability
+
+    surface = Color(0xFFF9FAFA),      // Light but not pure white
+    onSurface = Color(0xFF1C1D1E),
+
+    surfaceVariant = Color(0xFFE3E5E6), // Soft grey cards (not pure white)
+
+    outline = Color(0xFFB8C0C4)
 )
 
 @Composable
 fun QuizAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

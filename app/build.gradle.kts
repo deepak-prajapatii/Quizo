@@ -67,6 +67,13 @@ dependencies {
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.compiler)
 
+    implementation(libs.hilt.navigation.compose)
+    implementation(libs.navigation.compose)
+
+    api(libs.material.icons.extended)
+
+    implementation(libs.lottie.compose)
+
     implementation(project(":data"))
     implementation(project(":domain"))
 }

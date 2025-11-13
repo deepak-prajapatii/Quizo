@@ -4,5 +4,5 @@ class Question(
     val id: Long,
     val question: String,
     val options: List<String>,
-    val correctOptionIndex: Long
+    val correctOptionIndex: Int
 )
