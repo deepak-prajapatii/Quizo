@@ -312,7 +312,7 @@ fun StreakRow(
     iconSize: Dp = 18.dp
 ) {
     // track previous streak to detect crossing the threshold
-    var prevStreak by remember { mutableStateOf(currentStreak) }
+    var prevStreak by remember { mutableIntStateOf(currentStreak) }
     val justReachedThreshold = remember(currentStreak, prevStreak) {
         (prevStreak < threshold) && (currentStreak >= threshold)
     }
