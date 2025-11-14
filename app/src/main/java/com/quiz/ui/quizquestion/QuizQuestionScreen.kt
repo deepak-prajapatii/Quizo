@@ -162,6 +162,7 @@ fun QuizQuestionScreen(
         isAnswered = state.isAnswered,
         isCorrect = state.isCorrect,
         currentStreak = state.currentStreak,
+        correctOptionIndex = current.correctOptionIndex,
         onChoiceSelected = { idx -> viewModel.onChoiceSelected(idx) },
         onSkip = viewModel::onSkip
     )
@@ -178,6 +179,7 @@ fun QuizQuestionCard(
     isAnswered: Boolean,
     isCorrect: Boolean?,
     currentStreak: Int,
+    correctOptionIndex: Int,
     onChoiceSelected: (Int) -> Unit,
     onSkip: () -> Unit,
 ) {
@@ -278,7 +280,7 @@ fun QuizQuestionCard(
                     ) {
                         choices.forEachIndexed { idx, choice ->
                             val isSelected = selectedIndex == idx
-                            val showCorrect = isAnswered && isCorrect == true && isSelected
+                            val showCorrect = isAnswered && idx == correctOptionIndex
                             val showWrong = isAnswered && isSelected && isCorrect == false
 
                             ChoiceItem(
@@ -286,6 +288,7 @@ fun QuizQuestionCard(
                                 isSelected = isSelected,
                                 showCorrect = showCorrect,
                                 showWrong = showWrong,
+                                isTrueAnswer = isAnswered && idx == correctOptionIndex,
                                 onClick = { onChoiceSelected(idx) }
                             )
                         }
@@ -328,13 +331,14 @@ private fun ChoiceItem(
     isSelected: Boolean,
     showCorrect: Boolean,
     showWrong: Boolean,
+    isTrueAnswer: Boolean = false,
     onClick: () -> Unit
 ) {
-
     val containerColor = when {
         showCorrect -> MaterialTheme.colorScheme.primary
         showWrong -> MaterialTheme.colorScheme.surfaceVariant
         isSelected -> MaterialTheme.colorScheme.primary
+        isTrueAnswer -> MaterialTheme.colorScheme.primary.copy(alpha = 0.18f)
         else -> MaterialTheme.colorScheme.surfaceVariant
     }
 
@@ -342,6 +346,7 @@ private fun ChoiceItem(
         showCorrect -> MaterialTheme.colorScheme.onPrimary
         showWrong -> MaterialTheme.colorScheme.error
         isSelected -> MaterialTheme.colorScheme.onPrimary
+        isTrueAnswer -> MaterialTheme.colorScheme.primary
         else -> MaterialTheme.colorScheme.onBackground
     }
 
@@ -349,6 +354,7 @@ private fun ChoiceItem(
         showCorrect -> MaterialTheme.colorScheme.primary
         showWrong -> MaterialTheme.colorScheme.error
         isSelected -> MaterialTheme.colorScheme.primary
+        isTrueAnswer -> MaterialTheme.colorScheme.primary
         else -> MaterialTheme.colorScheme.outline
     }
 
@@ -362,7 +368,6 @@ private fun ChoiceItem(
         tonalElevation = 0.dp,
         shadowElevation = 0.dp
     ) {
-        // apply border and padding directly
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -502,6 +507,3 @@ fun StreakRow(
         )
     }
 }
-
-
-
