@@ -34,11 +34,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-
 
 @Composable
 fun QuizResultScreen(
@@ -57,7 +57,7 @@ fun QuizResultScreen(
     }
 
     // Map viewmodel state to UI params
-    val correctCount = state.score
+    val correctCount = state.correct
     val totalQuestions = state.totalQuestions
     val bestStreak = state.bestStreak
 
@@ -66,13 +66,8 @@ fun QuizResultScreen(
         correctCount = correctCount,
         totalQuestions = totalQuestions,
         bestStreak = bestStreak,
-        onRestart = {
-//            viewModel.restartQuiz()
-            onRestartQuiz()
-        },
-        onBack = {
-            backToHome()
-        }
+        onRestart = onRestartQuiz,
+        onBack = backToHome
     )
 }
 
@@ -133,10 +128,14 @@ fun QuizResultScreen(
 
                 Text(
                     text = "Congratulations!",
-                    style = MaterialTheme.typography.displaySmall.copy(fontSize = 34.sp),
-                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.displaySmall.copy(
+                        fontSize = 40.sp,
+                        fontWeight = FontWeight.Bold
+                    ),
+                    color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Center
                 )
+
 
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -165,14 +164,14 @@ fun QuizResultScreen(
                 ) {
                     ResultStatSurface(
                         title = "Score",
-                        bigText = "$percent%",
+                        value = "$percent%",
                         subtitle = "$correctCount/$totalQuestions correct",
                         modifier = Modifier.weight(1f)
                     )
 
                     ResultStatSurface(
                         title = "Best Streak",
-                        bigText = "$bestStreak",
+                        value = "$bestStreak",
                         subtitle = "in a row",
                         modifier = Modifier.weight(1f)
                     )
@@ -185,8 +184,8 @@ fun QuizResultScreen(
                     onClick = onRestart,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(64.dp),
-                    shape = RoundedCornerShape(36.dp),
+                        .height(52.dp),
+                    shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary
@@ -198,7 +197,7 @@ fun QuizResultScreen(
                         modifier = Modifier.size(20.dp)
                     )
                     Spacer(modifier = Modifier.width(10.dp))
-                    Text(text = "Restart Quiz", style = MaterialTheme.typography.titleLarge)
+                    Text(text = "Restart Quiz", style = MaterialTheme.typography.titleMedium)
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -207,7 +206,7 @@ fun QuizResultScreen(
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(56.dp)
+                        .height(52.dp)
                         .clip(RoundedCornerShape(16.dp))
                         .border(
                             width = 1.dp,
@@ -245,7 +244,7 @@ fun QuizResultScreen(
 @Composable
 private fun ResultStatSurface(
     title: String,
-    bigText: String,
+    value: String,
     subtitle: String,
     modifier: Modifier = Modifier
 ) {
@@ -263,14 +262,21 @@ private fun ResultStatSurface(
         ) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.secondary
+                style = MaterialTheme.typography.displaySmall.copy(
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold
+                ),
+                color = MaterialTheme.colorScheme.secondary,
+                textAlign = TextAlign.Center
             )
-            Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = bigText,
-                style = MaterialTheme.typography.headlineSmall.copy(fontSize = 32.sp),
-                color = MaterialTheme.colorScheme.onSurface
+                text = value,
+                style = MaterialTheme.typography.displaySmall.copy(
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.Bold
+                ),
+                color = MaterialTheme.colorScheme.onBackground,
+                textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(6.dp))
             Text(
@@ -281,4 +287,3 @@ private fun ResultStatSurface(
         }
     }
 }
-

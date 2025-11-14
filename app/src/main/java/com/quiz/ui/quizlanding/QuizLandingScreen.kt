@@ -25,24 +25,23 @@ fun QuizLandingScreen(
     viewModel: QuizLandingViewModel = hiltViewModel(),
     onStartClick: () -> Unit = {},
 ) {
-    // outer container - center content block horizontally & vertically
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // Constrain the content width to look like the screenshot and center it
+
         Column(
             modifier = Modifier
-                .widthIn(max = 420.dp)            // limit width on wide screens/emulator
-                .fillMaxWidth()                   // but take full width on narrow screens
+                .widthIn(max = 420.dp)
+                .fillMaxWidth()
                 .padding(horizontal = 28.dp)
-                .align(Alignment.Center),         // center whole column inside the screen
+                .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(4.dp))
 
-            // Circular logo / avatar (bigger like the screenshot)
+
             Surface(
                 shape = RoundedCornerShape(18.dp),
                 color = MaterialTheme.colorScheme.surfaceVariant,
@@ -62,12 +61,12 @@ fun QuizLandingScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Title — larger, bold like screenshot
+            // Title
             Text(
                 text = "Android Quiz",
                 style = MaterialTheme.typography.displaySmall.copy(
                     fontSize = 44.sp,
-                    fontWeight = FontWeight.Black
+                    fontWeight = FontWeight.Bold
                 ),
                 color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center
@@ -75,7 +74,7 @@ fun QuizLandingScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Subtitle / description - limited width visually by the column
+            // Subtitle
             Text(
                 text = "Test your knowledge with 10 challenging\nquestions about Android development",
                 style = MaterialTheme.typography.bodyLarge,

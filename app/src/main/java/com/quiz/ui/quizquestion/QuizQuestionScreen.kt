@@ -54,14 +54,16 @@ import kotlinx.coroutines.delay
 @Composable
 fun QuizQuestionScreen(
     viewModel: QuizQuestionViewModel = hiltViewModel(),
-    showResult: () -> Unit
+    showResult: (Int, Int, Int) -> Unit
 ) {
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.event.collect { event ->
             when(event) {
-                QuizQuestionUIEvent.ShowResult -> showResult.invoke()
+                QuizQuestionUIEvent.ShowResult -> showResult(
+                    state.score, state.questions.size,state.bestStreak
+                )
             }
         }
 
@@ -93,7 +95,6 @@ fun QuizQuestionScreen(
         isAnswered = state.isAnswered,
         isCorrect = state.isCorrect,
         currentStreak = state.currentStreak,
-        bestStreak = state.bestStreak,
         onChoiceSelected = { idx -> viewModel.onChoiceSelected(idx) },
         onSkip = viewModel::onSkip
     )
@@ -109,7 +110,6 @@ fun QuizQuestionCard(
     isAnswered: Boolean,
     isCorrect: Boolean?,
     currentStreak: Int,
-    bestStreak: Int,
     onChoiceSelected: (Int) -> Unit,
     onSkip: () -> Unit,
 ) {
