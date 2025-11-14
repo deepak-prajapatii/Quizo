@@ -50,7 +50,7 @@ fun QuizLandingScreen(
                 shape = RoundedCornerShape(18.dp),
                 color = MaterialTheme.colorScheme.surfaceVariant,
                 modifier = Modifier
-                    .size(110.dp)
+                    .size(80.dp)
                     .clip(RoundedCornerShape(18.dp))
             ) {
                 Box(contentAlignment = Alignment.Center) {
@@ -58,7 +58,7 @@ fun QuizLandingScreen(
                         painter = rememberVectorPainter(Icons.Default.BubbleChart),
                         contentDescription = "logo",
                         tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(44.dp)
+                        modifier = Modifier.size(40.dp)
                     )
                 }
             }
@@ -69,25 +69,25 @@ fun QuizLandingScreen(
             Text(
                 text = "Android Quiz",
                 style = MaterialTheme.typography.displaySmall.copy(
-                    fontSize = 44.sp,
+                    fontSize = 36.sp,
                     fontWeight = FontWeight.Bold
                 ),
                 color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             // Subtitle
             Text(
-                text = "Test your knowledge with 10 challenging\nquestions about Android development",
-                style = MaterialTheme.typography.bodyLarge,
+                text = "Test your knowledge with 10 challenging questions about Android development",
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.secondary,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = 6.dp)
             )
 
-            Spacer(modifier = Modifier.height(22.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             // Info card with rounded corners and larger corner radius to match screenshot
             Card(
@@ -138,23 +138,29 @@ fun QuizLandingScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 6.dp),
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                FooterStat(
-                    number = "10",
-                    label = "Questions",
-                    modifier = Modifier.width(120.dp)
-                )
-                FooterStat(
-                    number = "4",
-                    label = "Choices",
-                    modifier = Modifier.width(120.dp)
-                )
-                FooterStat(
-                    number = "~5",
-                    label = "Minutes",
-                    modifier = Modifier.width(120.dp)
-                )
+                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                    FooterStat(
+                        number = "10",
+                        label = "Questions"
+                    )
+                }
+
+                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                    FooterStat(
+                        number = "4",
+                        label = "Choices"
+                    )
+                }
+
+                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                    FooterStat(
+                        number = "~5",
+                        label = "Minutes"
+                    )
+                }
             }
         }
     }
@@ -195,10 +201,12 @@ private fun FeatureRow(
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = description,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontSize = 12.sp
+                ),
                 color = MaterialTheme.colorScheme.secondary,
                 lineHeight = 16.sp
             )
@@ -216,7 +224,6 @@ private fun FooterStat(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = modifier
-            .fillMaxWidth()
             .padding(vertical = 6.dp)
     ) {
         Text(

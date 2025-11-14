@@ -2,6 +2,7 @@ package com.quiz.ui.quizquestion
 
 import androidx.lifecycle.viewModelScope
 import com.quiz.base.BaseViewModel
+import com.quiz.domain.base.GlobalException
 import com.quiz.domain.usecase.GetAllQuestionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -17,7 +18,7 @@ class QuizQuestionViewModel @Inject constructor(
         getAllQuestions()
     }
 
-    private fun getAllQuestions() {
+     fun getAllQuestions() {
         viewModelScope.launch {
 
             updateState { state -> state.copy(isLoading = true) }
@@ -36,15 +37,12 @@ class QuizQuestionViewModel @Inject constructor(
                                 currentStreak = 0
                             )
                         }
-                    }.onFailure {
-                        //handle later
+                    }.onFailure { exception ->
+                        updateState { state -> state.copy(isLoading = false, error = exception.message) }
+                        sendEvent(QuizQuestionUIEvent.ShowError)
                     }
                 }
         }
-    }
-
-    fun restartQuiz() {
-        getAllQuestions()
     }
 
     fun onChoiceSelected(index: Int) {
@@ -55,7 +53,7 @@ class QuizQuestionViewModel @Inject constructor(
 
         val newScore = if (isCorrect) currentState.score + 1 else currentState.score
         val newCurrentStreak = if (isCorrect) currentState.currentStreak + 1 else 0
-        val newBest = maxOf(currentState.bestStreak, newCurrentStreak)
+        val newBestStreak = maxOf(currentState.bestStreak, newCurrentStreak)
 
         updateState {
             it.copy(
@@ -64,17 +62,14 @@ class QuizQuestionViewModel @Inject constructor(
                 isCorrect = isCorrect,
                 score = newScore,
                 currentStreak = newCurrentStreak,
-                bestStreak = newBest
+                bestStreak = newBestStreak
             )
         }
 
-        if (newBest > currentState.bestStreak) {
-            viewModelScope.launch {
-//                streakRepo.saveBestStreak(newBest)
-            }
+        if (newBestStreak > currentState.bestStreak) {
+            updateState { state -> state.copy(bestStreak = newBestStreak) }
         }
 
-        // auto-advance after delay
         viewModelScope.launch {
             delay(AUTO_DELAY_TIMER_IN_SEC)
             proceedToNext()

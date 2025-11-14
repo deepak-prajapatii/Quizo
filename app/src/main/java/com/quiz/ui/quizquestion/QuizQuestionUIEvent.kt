@@ -4,4 +4,5 @@ import com.quiz.base.UIEvent
 
 sealed class QuizQuestionUIEvent : UIEvent {
     object ShowResult: QuizQuestionUIEvent()
+    object ShowError: QuizQuestionUIEvent()
 }

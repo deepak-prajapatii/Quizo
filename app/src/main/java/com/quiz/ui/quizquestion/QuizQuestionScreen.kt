@@ -24,14 +24,18 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocalFireDepartment
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -43,6 +47,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -55,6 +60,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.airbnb.lottie.compose.rememberLottieDynamicProperties
 import com.airbnb.lottie.compose.rememberLottieDynamicProperty
+import com.quiz.ui.component.ErrorDialog
 import com.quiz.ui.component.FullScreenLoaderOverlay
 import kotlinx.coroutines.delay
 
@@ -66,6 +72,8 @@ fun QuizQuestionScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
+    var showErrorDialog by remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
         viewModel.event.collect { event ->
             when (event) {
@@ -75,9 +83,20 @@ fun QuizQuestionScreen(
                         state.questions.size,
                         state.bestStreak
                     )
+
+                is QuizQuestionUIEvent.ShowError -> {
+                    showErrorDialog = true
+                }
             }
         }
     }
+
+    ErrorDialog(
+        title = "Oops!",
+        message = state.error ?: "An unexpected error occurred.",
+        onDismiss = { showErrorDialog = false },
+        show = showErrorDialog
+    )
 
     if (state.isLoading) {
         Box(
@@ -106,8 +125,13 @@ fun QuizQuestionScreen(
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
                     text = "Please try again later.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.secondary
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        textDecoration = TextDecoration.Underline
+                    ),
+                    color = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.clickable {
+                        viewModel.getAllQuestions()
+                    }
                 )
             }
         }
@@ -269,20 +293,29 @@ fun QuizQuestionCard(
 
                     Spacer(modifier = Modifier.height(24.dp))
 
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    val interactionSource = remember { MutableInteractionSource() }
+
                     Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .clickable(
+                                interactionSource = interactionSource,
+                                onClick = { onSkip() }
+                            )
+                            .padding(8.dp)
                     ) {
                         Text(
                             text = "Skip",
-                            modifier = Modifier
-                                .clickable { onSkip() }
-                                .padding(vertical = 8.dp),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
+            }
             }
         }
     }

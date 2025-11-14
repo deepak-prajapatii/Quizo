@@ -48,12 +48,10 @@ fun QuizResultScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
-    // Map viewmodel state to UI params
     val correctCount = state.correct
     val totalQuestions = state.totalQuestions
     val bestStreak = state.bestStreak
 
-    // Call the visual UI
     QuizResultScreen(
         correctCount = correctCount,
         totalQuestions = totalQuestions,
@@ -124,7 +122,7 @@ fun QuizResultScreen(
                 Text(
                     text = "Congratulations!",
                     style = MaterialTheme.typography.displaySmall.copy(
-                        fontSize = 40.sp,
+                        fontSize = 32.sp,
                         fontWeight = FontWeight.Bold
                     ),
                     color = MaterialTheme.colorScheme.onBackground,
