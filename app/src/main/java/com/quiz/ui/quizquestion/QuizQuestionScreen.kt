@@ -1,6 +1,7 @@
 package com.quiz.ui.quizquestion
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
@@ -174,22 +175,9 @@ fun QuizQuestionCard(
             elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
         ) {
 
-            AnimatedContent(
-                targetState = questionIndex,
-                transitionSpec = {
-                    (slideInHorizontally { width -> width / 2 } + fadeIn() togetherWith
-                            slideOutHorizontally { width -> -width / 2 } + fadeOut())
-                        .using(
-                            SizeTransform(clip = false)
-                        )
-                },
-                contentAlignment = Alignment.TopStart,
-                label = "QuestionTransition",
-                modifier = Modifier.fillMaxWidth()
-            ) { animatedIndex ->
+            Crossfade(targetState = questionIndex, label = "QuestionCrossfade") { animatedIndex ->
 
-
-                Column(
+            Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp, vertical = 18.dp)
