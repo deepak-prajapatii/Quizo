@@ -62,7 +62,7 @@ fun QuizNavGraph() {
 
                 QuizResultScreen(onRestartQuiz = {
                     navController.navigate(Screen.QuizQuestion.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
+                        popUpTo(Screen.ShowResult.route) {
                             inclusive = true
                         }
                         launchSingleTop = true
