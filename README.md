@@ -10,6 +10,21 @@ Minimal, modular Android application for a quiz domain. Emphasizes clear separat
 - Languages: Kotlin
 - Build system: Gradle (use the project Gradle wrapper)
 - Target: Android SDK (configured per-module in `build.gradle.kts`)
+- Dependency Injection: Dagger Hilt — for DI and modularity
+- Networking: Retrofit — type-safe HTTP client
+- Networking: OkHttp — HTTP client for network calls
+- Serialization: Gson — JSON serialization/deserialization
+- UI: Jetpack Compose — modern declarative UI toolkit
+- UI: Material3 — Material Design components for Compose
+- Navigation: Navigation Compose — navigation for Compose
+- DI Navigation: Hilt Navigation Compose — Hilt integration for navigation
+- Animations: Lottie — vector animations in Compose
+- Concurrency: Kotlin Coroutines — async programming
+- Lifecycle — lifecycle-aware components
+- Activity Compose — Compose integration for activities
+- Icons: Material Icons Extended — additional icon set for Compose
+
+All library versions are managed in `gradle/libs.versions.toml` for consistency and easy upgrades.
 
 ## Architecture 
 - Pattern: Clean / Hexagonal-inspired modular architecture.
@@ -37,4 +52,3 @@ Minimal, modular Android application for a quiz domain. Emphasizes clear separat
 - Respect module boundaries and dependency directions.
 - Keep business logic in `domain`. Place Android- and framework-specific code in `app`/`presentation`.
 - Write unit tests for core use cases and integration tests where appropriate.
-

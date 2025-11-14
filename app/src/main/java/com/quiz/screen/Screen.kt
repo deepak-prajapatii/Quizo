@@ -1,4 +1,4 @@
-package com.quiz
+package com.quiz.screen
 
 sealed class Screen(val route: String, val name: String) {
     object QuizLanding: Screen(route = "quiz_landing", name = "Quiz Landing")

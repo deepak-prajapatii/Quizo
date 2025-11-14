@@ -10,7 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.quiz.Screen
+import com.quiz.screen.Screen
 import com.quiz.ui.quizlanding.QuizLandingScreen
 import com.quiz.ui.quizquestion.QuizQuestionScreen
 import com.quiz.ui.result.QuizResultScreen
