@@ -177,14 +177,15 @@ fun QuizQuestionCard(
             AnimatedContent(
                 targetState = questionIndex,
                 transitionSpec = {
-
                     (slideInHorizontally { width -> width / 2 } + fadeIn() togetherWith
                             slideOutHorizontally { width -> -width / 2 } + fadeOut())
                         .using(
                             SizeTransform(clip = false)
                         )
                 },
-                label = "QuestionTransition"
+                contentAlignment = Alignment.TopStart,
+                label = "QuestionTransition",
+                modifier = Modifier.fillMaxWidth()
             ) { animatedIndex ->
 
 
