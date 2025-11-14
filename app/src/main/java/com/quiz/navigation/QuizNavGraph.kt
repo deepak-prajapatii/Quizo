@@ -25,9 +25,7 @@ fun QuizNavGraph() {
     Surface(modifier = Modifier.fillMaxSize()) {
         NavHost(
             navController = navController,
-            startDestination = Screen.ShowResult.createRoute(
-                12,20,2
-            ),
+            startDestination = Screen.QuizLanding.route,
             route = NAV_HOST_ROUTE
         ) {
             composable(Screen.QuizLanding.route) {
@@ -40,9 +38,9 @@ fun QuizNavGraph() {
                 QuizQuestionScreen { correctScore, totalQuestionCount, bestStreak ->
                     navController.navigate(
                         Screen.ShowResult.createRoute(
-                            correct = 12,
-                            total = 20,
-                            bestStreak = 5
+                            correct = correctScore,
+                            total = totalQuestionCount,
+                            bestStreak = bestStreak
                         )
                     )
                 }
@@ -63,15 +61,7 @@ fun QuizNavGraph() {
                         }
                         launchSingleTop = true
                     }
-                },
-                    backToHome = {
-                        navController.navigate(Screen.QuizLanding.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                inclusive = true
-                            }
-                            launchSingleTop = true
-                        }
-                    })
+                })
             }
         }
     }

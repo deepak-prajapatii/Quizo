@@ -103,6 +103,6 @@ class QuizQuestionViewModel @Inject constructor(
     }
 
     companion object {
-        private const val AUTO_DELAY_TIMER_IN_SEC = 900L
+        private const val AUTO_DELAY_TIMER_IN_SEC = 2000L
     }
 }

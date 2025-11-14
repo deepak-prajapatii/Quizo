@@ -1,6 +1,8 @@
 package com.quiz.ui.quizquestion
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.Spring
@@ -8,12 +10,18 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.quiz.R
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -48,6 +56,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.airbnb.lottie.compose.rememberLottieDynamicProperties
 import com.airbnb.lottie.compose.rememberLottieDynamicProperty
+import com.quiz.ui.component.FullScreenLoaderOverlay
 import kotlinx.coroutines.delay
 
 
@@ -67,14 +76,6 @@ fun QuizQuestionScreen(
             }
         }
 
-    }
-
-    // Loading state
-    if (state.isLoading) {
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
-        }
-        return
     }
 
     val current = state.questions.getOrNull(state.currentQuestionIndex)
@@ -98,7 +99,13 @@ fun QuizQuestionScreen(
         onChoiceSelected = { idx -> viewModel.onChoiceSelected(idx) },
         onSkip = viewModel::onSkip
     )
+
+    FullScreenLoaderOverlay(
+        visible = state.isLoading,
+        loaderSize = 200.dp
+    )
 }
+
 
 @Composable
 fun QuizQuestionCard(
@@ -125,117 +132,137 @@ fun QuizQuestionCard(
                 .widthIn(max = 420.dp)
                 .padding(vertical = 12.dp),
             shape = RoundedCornerShape(28.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            ),
             elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 18.dp)
-            ) {
-                // Top row: title + streak chip
-                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = "Quiz",
-                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
 
-                    Spacer(modifier = Modifier.weight(1f))
+            AnimatedContent(
+                targetState = questionIndex,
+                transitionSpec = {
 
-//                    // Streak chip
-//                    Surface(
-//                        shape = RoundedCornerShape(20.dp),
-//                        color = MaterialTheme.colorScheme.surfaceVariant
-//                    ) {
-//                        Row(
-//                            verticalAlignment = Alignment.CenterVertically,
-//                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
-//                        ) {
-//                            Icon(
-//                                imageVector = Icons.Default.LocalFireDepartment,
-//                                contentDescription = "streak",
-//                                tint = MaterialTheme.colorScheme.primary,
-//                                modifier = Modifier.size(18.dp)
-//                            )
-//                            Spacer(modifier = Modifier.width(8.dp))
-//                            Text(
-//                                text = "$currentStreak",
-//                                style = MaterialTheme.typography.bodySmall,
-//                                color = MaterialTheme.colorScheme.onSurface
-//                            )
-//                        }
-//                    }
+                    (slideInHorizontally { width -> width / 2 } + fadeIn() togetherWith
+                            slideOutHorizontally { width -> -width / 2 } + fadeOut())
+                        .using(
+                            SizeTransform(clip = false)
+                        )
+                },
+                label = "QuestionTransition"
+            ) { animatedIndex ->
 
-                    StreakRow(currentStreak = currentStreak, threshold = 2, lottieResId = R.raw.fire_streak)
-                }
 
-                Spacer(modifier = Modifier.height(18.dp))
-
-                // Progress label
-                Text(
-                    text = "Question $questionIndex of $totalQuestions",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.secondary
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Thin progress rail (smaller)
-                LinearProgressIndicator(
-                    progress = (questionIndex.toFloat() / totalQuestions.toFloat()).coerceIn(0f, 1f),
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(6.dp)
-                        .clip(RoundedCornerShape(8.dp)),
-                    color = MaterialTheme.colorScheme.primary,
-                    trackColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.12f)
-                )
+                        .padding(horizontal = 20.dp, vertical = 18.dp)
+                ) {
 
-                Spacer(modifier = Modifier.height(22.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Quiz",
+                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
 
+                        Spacer(modifier = Modifier.weight(1f))
 
-                Text(
-                    text = question,
-                    style = MaterialTheme.typography.headlineSmall.copy(fontSize = 20.sp, fontWeight = FontWeight.SemiBold),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    lineHeight = 24.sp
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                Column(verticalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
-                    choices.forEachIndexed { idx, choice ->
-                        val isSelected = selectedIndex == idx
-                        val showCorrect = isAnswered && isCorrect == true && isSelected
-                        val showWrong = isAnswered && isSelected && isCorrect == false
-                        ChoiceItem(
-                            text = choice,
-                            isSelected = isSelected,
-                            showCorrect = showCorrect,
-                            showWrong = showWrong,
-                            onClick = { onChoiceSelected(idx) }
+                        StreakRow(
+                            currentStreak = currentStreak,
+                            threshold = 3,
+                            lottieResId = R.raw.fire_streak
                         )
                     }
-                }
 
-                Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(18.dp))
 
-                // Skip action centered
-                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                     Text(
-                        text = "Skip",
-                        modifier = Modifier
-                            .clickable { onSkip() }
-                            .padding(vertical = 8.dp),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurface
+                        text = "Question $animatedIndex of $totalQuestions",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.secondary
                     )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    val progress = (animatedIndex.toFloat() / totalQuestions.toFloat()).coerceIn(0f, 1f)
+
+                    val progressColor = MaterialTheme.colorScheme.primary
+                    val trackColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.12f)
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(6.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(trackColor)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .fillMaxWidth(progress)
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(progressColor)
+                        )
+                    }
+
+
+                    Spacer(modifier = Modifier.height(22.dp))
+
+                    Text(
+                        text = question,
+                        style = MaterialTheme.typography.headlineSmall.copy(
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.SemiBold
+                        ),
+                        color = MaterialTheme.colorScheme.onSurface,
+                        lineHeight = 24.sp
+                    )
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        choices.forEachIndexed { idx, choice ->
+                            val isSelected = selectedIndex == idx
+                            val showCorrect = isAnswered && isCorrect == true && isSelected
+                            val showWrong = isAnswered && isSelected && isCorrect == false
+
+                            ChoiceItem(
+                                text = choice,
+                                isSelected = isSelected,
+                                showCorrect = showCorrect,
+                                showWrong = showWrong,
+                                onClick = { onChoiceSelected(idx) }
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Skip",
+                            modifier = Modifier
+                                .clickable { onSkip() }
+                                .padding(vertical = 8.dp),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                 }
             }
         }
     }
 }
+
 
 @Composable
 private fun ChoiceItem(
@@ -245,33 +272,26 @@ private fun ChoiceItem(
     showWrong: Boolean,
     onClick: () -> Unit
 ) {
-    // Determine colors based on state
-    val primary = MaterialTheme.colorScheme.primary
-    val onPrimary = MaterialTheme.colorScheme.onPrimary
-    val defaultBg = MaterialTheme.colorScheme.surfaceVariant
-    val outline = MaterialTheme.colorScheme.outline
-    val error = MaterialTheme.colorScheme.error
-    val contentColor = MaterialTheme.colorScheme.onSurface
 
     val containerColor = when {
-        showCorrect -> primary
-        showWrong -> MaterialTheme.colorScheme.surfaceVariant // keep bg same but outline red
-        isSelected -> primary
-        else -> defaultBg
+        showCorrect -> MaterialTheme.colorScheme.primary
+        showWrong -> MaterialTheme.colorScheme.surfaceVariant
+        isSelected -> MaterialTheme.colorScheme.primary
+        else -> MaterialTheme.colorScheme.surfaceVariant
     }
 
     val textColor = when {
-        showCorrect -> onPrimary
-        isSelected -> onPrimary
-        showWrong -> contentColor
-        else -> contentColor
+        showCorrect -> MaterialTheme.colorScheme.onPrimary
+        showWrong -> MaterialTheme.colorScheme.error
+        isSelected -> MaterialTheme.colorScheme.onPrimary
+        else -> MaterialTheme.colorScheme.onBackground
     }
 
     val borderColor = when {
-        showCorrect -> primary
-        showWrong -> error
-        isSelected -> primary
-        else -> outline
+        showCorrect -> MaterialTheme.colorScheme.primary
+        showWrong -> MaterialTheme.colorScheme.error
+        isSelected -> MaterialTheme.colorScheme.primary
+        else -> MaterialTheme.colorScheme.outline
     }
 
     Surface(
@@ -410,7 +430,6 @@ fun StreakRow(
                     )
                 )
 
-                // Fill the box exactly so icon & lottie share the same visual center/size
                 LottieAnimation(
                     composition = composition,
                     progress = progress,

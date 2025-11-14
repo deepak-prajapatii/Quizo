@@ -39,22 +39,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.quiz.ui.component.FullScreenLoaderOverlay
 
 @Composable
 fun QuizResultScreen(
     viewModel: QuizResultViewModel = hiltViewModel(),
-    onRestartQuiz: () -> Unit,
-    backToHome: () -> Unit
+    onRestartQuiz: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
-
-    // Loading state
-    if (state.isLoading) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
-        }
-        return
-    }
 
     // Map viewmodel state to UI params
     val correctCount = state.correct
@@ -67,7 +59,11 @@ fun QuizResultScreen(
         totalQuestions = totalQuestions,
         bestStreak = bestStreak,
         onRestart = onRestartQuiz,
-        onBack = backToHome
+    )
+
+    FullScreenLoaderOverlay(
+        visible = state.isLoading,
+        loaderSize = 200.dp
     )
 }
 
@@ -77,7 +73,6 @@ fun QuizResultScreen(
     totalQuestions: Int,
     bestStreak: Int,
     onRestart: () -> Unit,
-    onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val percent = if (totalQuestions > 0) (correctCount * 100 / totalQuestions) else 0
@@ -201,41 +196,6 @@ fun QuizResultScreen(
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
-
-                // Back to Home (Outlined Surface Button)
-                Surface(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(52.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .border(
-                            width = 1.dp,
-                            color = MaterialTheme.colorScheme.outline,
-                            shape = RoundedCornerShape(16.dp)
-                        )
-                        .clickable { onBack() },
-                    color = MaterialTheme.colorScheme.surface
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Home,
-                            contentDescription = "home",
-                            tint = MaterialTheme.colorScheme.onSurface
-                        )
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Text(
-                            text = "Back to Home",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(6.dp))
             }
         }
     }
