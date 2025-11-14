@@ -1,7 +1,6 @@
 package com.quiz.ui.quizquestion
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.Crossfade
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
@@ -32,7 +31,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -69,24 +67,67 @@ fun QuizQuestionScreen(
 
     LaunchedEffect(Unit) {
         viewModel.event.collect { event ->
-            when(event) {
-                QuizQuestionUIEvent.ShowResult -> showResult(
-                    state.score, state.questions.size,state.bestStreak
-                )
+            when (event) {
+                QuizQuestionUIEvent.ShowResult ->
+                    showResult(
+                        state.score,
+                        state.questions.size,
+                        state.bestStreak
+                    )
             }
         }
-
     }
 
-    val current = state.questions.getOrNull(state.currentQuestionIndex)
-    if (current == null) {
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("No questions available")
+    if (state.isLoading) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            FullScreenLoaderOverlay(
+                visible = true,
+                loaderSize = 200.dp
+            )
         }
         return
     }
 
-    // Show the question card UI, wiring callbacks
+    if (state.questions.isEmpty()) {
+        Box(
+            modifier = Modifier.fillMaxSize().padding(20.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "No questions available",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = "Please try again later.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+            }
+        }
+        return
+    }
+
+    val current = state.questions.getOrNull(state.currentQuestionIndex)
+    if (current == null) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "Unable to load question.",
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
+        return
+    }
+
     QuizQuestionCard(
         questionIndex = state.currentQuestionIndex + 1,
         totalQuestions = state.questions.size,
@@ -98,11 +139,6 @@ fun QuizQuestionScreen(
         currentStreak = state.currentStreak,
         onChoiceSelected = { idx -> viewModel.onChoiceSelected(idx) },
         onSkip = viewModel::onSkip
-    )
-
-    FullScreenLoaderOverlay(
-        visible = state.isLoading,
-        loaderSize = 200.dp
     )
 }
 

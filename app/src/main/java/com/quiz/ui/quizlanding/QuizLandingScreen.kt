@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.quiz.ui.component.FullScreenLoaderOverlay
-import com.quiz.ui.component.LottieLoader
 
 @Composable
 fun QuizLandingScreen(
@@ -46,7 +45,6 @@ fun QuizLandingScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(4.dp))
-
 
             Surface(
                 shape = RoundedCornerShape(18.dp),

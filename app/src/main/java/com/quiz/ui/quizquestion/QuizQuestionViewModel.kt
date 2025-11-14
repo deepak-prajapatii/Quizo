@@ -14,7 +14,7 @@ class QuizQuestionViewModel @Inject constructor(
 ) : BaseViewModel<QuizQuestionUIState, QuizQuestionUIEvent>(initialState = QuizQuestionUIState()) {
 
     init {
-
+        getAllQuestions()
     }
 
     private fun getAllQuestions() {
