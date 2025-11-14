@@ -36,13 +36,19 @@ fun QuizNavGraph() {
             }
             composable(Screen.QuizQuestion.route) {
                 QuizQuestionScreen { correctScore, totalQuestionCount, bestStreak ->
+
                     navController.navigate(
                         Screen.ShowResult.createRoute(
                             correct = correctScore,
                             total = totalQuestionCount,
                             bestStreak = bestStreak
                         )
-                    )
+                    ) {
+                        popUpTo(NAV_HOST_ROUTE) {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                    }
                 }
             }
 
