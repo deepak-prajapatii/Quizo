@@ -418,33 +418,26 @@ fun StreakRow(
                     .semantics { contentDescription = "streak-icon" }
             )
 
-            // --- Lottie (only used when lottieResId provided) ---
             if (lottieResId != null) {
-                // remember the composition spec and composition
                 val compositionSpec = remember(lottieResId) { LottieCompositionSpec.RawRes(lottieResId) }
                 val composition by rememberLottieComposition(spec = compositionSpec)
 
-                // get composition duration (ms) if available to time the burst
                 val compositionDurationMs = composition?.duration?.toLong() ?: 700L
 
-                // control iterations and speed: burst once when justReachedThreshold
                 var iterations by remember { mutableIntStateOf(LottieConstants.IterateForever) }
                 var speed by remember { mutableFloatStateOf(1f) }
 
                 LaunchedEffect(justReachedThreshold, compositionDurationMs, showLottie) {
                     if (justReachedThreshold && showLottie) {
-                        // play the "burst" once at higher speed
                         iterations = 1
                         speed = 1.8f
                         delay(compositionDurationMs.coerceAtLeast(300L))
                         iterations = LottieConstants.IterateForever
                         speed = 0.95f
                     } else if (!showLottie) {
-                        // hidden -> reset
                         iterations = LottieConstants.IterateForever
                         speed = 1f
                     } else {
-                        // already visible (not a fresh crossing) -> gentle loop
                         iterations = LottieConstants.IterateForever
                         speed = 0.95f
                     }
@@ -457,7 +450,6 @@ fun StreakRow(
                     speed = speed
                 )
 
-                // tint (wildcard) — remove or change keyPath if it over-tints
                 val dynamicProperties = rememberLottieDynamicProperties(
                     rememberLottieDynamicProperty(
                         property = LottieProperty.COLOR,

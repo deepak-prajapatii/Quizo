@@ -12,26 +12,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = PrimaryGreen,              // Accent green
-    onPrimary = Color(0xFF0F2914),       // Dark text/icon on green
+    primary = PrimaryGreen,
+    onPrimary = Color(0xFF0F2914),
 
     primaryContainer = PrimaryGreenDark,
     onPrimaryContainer = Color.White,
 
-    secondary = SecondaryText,           // Muted grey for descriptions
+    secondary = SecondaryText,
     onSecondary = Color.White,
 
     tertiary = PrimaryGreenLight,
 
-    background = Background,             // #0E1112 dark charcoal
-    onBackground = OnBackground,         // #BFC8D0 soft white
+    background = Background,
+    onBackground = OnBackground,
 
-    surface = Surface,                   // #151819 deep grey
-    onSurface = OnSurface,               // #BFC8D0
-    surfaceVariant = SurfaceVariant,     // #222526 raised card
+    surface = Surface,
+    onSurface = OnSurface,
+    surfaceVariant = SurfaceVariant,
     onSurfaceVariant = OnSurface,
 
-    outline = Outline,                   // #2B3336 thin borders
+    outline = Outline,
 
     error = Error,
     onError = Color.White,
@@ -45,19 +45,19 @@ private val LightColorScheme = lightColorScheme(
     primaryContainer = PrimaryGreenDark,
     onPrimaryContainer = Color.White,
 
-    secondary = SecondaryText,       // Still muted grey, NOT dark grey
+    secondary = SecondaryText,
     onSecondary = Color.Black,
 
     tertiary = PrimaryGreenLight,
 
     // Soft-light mode, not bright white
-    background = Color(0xFFF2F4F3),   // Gentle off-white with green hint
-    onBackground = Color(0xFF1B1C1D), // Darker grey for readability
+    background = Color(0xFFF2F4F3),
+    onBackground = Color(0xFF1B1C1D),
 
-    surface = Color(0xFFF9FAFA),      // Light but not pure white
+    surface = Color(0xFFF9FAFA),
     onSurface = Color(0xFF1C1D1E),
 
-    surfaceVariant = Color(0xFFE3E5E6), // Soft grey cards (not pure white)
+    surfaceVariant = Color(0xFFE3E5E6),
 
     outline = Color(0xFFB8C0C4)
 )
